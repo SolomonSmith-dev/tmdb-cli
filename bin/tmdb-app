@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Simple wrapper to call tmdb_app.py
+PYTHON=${PYTHON:-python3}
+DIR=$(cd "$(dirname "$0")/.." && pwd)
+exec "$PYTHON" "$DIR/tmdb_app.py" "$@"
