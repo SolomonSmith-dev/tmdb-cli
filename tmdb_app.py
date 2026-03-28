@@ -18,11 +18,18 @@ from typing import Any, Dict, List, Optional
 try:
     # optional dependency to load .env files
     from dotenv import load_dotenv
-except Exception:
+except ImportError:
     load_dotenv = None
 
 
 BASE_URL = "https://api.themoviedb.org/3/movie"
+
+ENDPOINTS = {
+    "playing": "now_playing",
+    "popular": "popular",
+    "top": "top_rated",
+    "upcoming": "upcoming",
+}
 
 
 class TMDBClient:
@@ -42,17 +49,9 @@ class TMDBClient:
         except requests.RequestException as e:
             raise RuntimeError(f"Network/API error: {e}") from e
 
-    def get_now_playing(self) -> Dict[str, Any]:
-        return self._get("now_playing")
-
-    def get_popular(self) -> Dict[str, Any]:
-        return self._get("popular")
-
-    def get_top_rated(self) -> Dict[str, Any]:
-        return self._get("top_rated")
-
-    def get_upcoming(self) -> Dict[str, Any]:
-        return self._get("upcoming")
+    def get_movies(self, category: str, page: int = 1) -> Dict[str, Any]:
+        endpoint = ENDPOINTS[category]
+        return self._get(endpoint, params={"page": page})
 
 
 def format_movies(movies: List[Dict[str, Any]]) -> str:
@@ -74,7 +73,10 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="TMDB CLI - fetch movie lists from TMDB")
     parser.add_argument("--type", required=True, choices=["playing", "popular", "top", "upcoming"], help="Type of movies to fetch")
     parser.add_argument("--page", type=int, default=1, help="Page of results to fetch (default: 1)")
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.page < 1:
+        parser.error("--page must be >= 1")
+    return args
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -95,18 +97,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     client = TMDBClient(api_key)
 
     try:
-        if args.type == "playing":
-            data = client.get_now_playing()
-        elif args.type == "popular":
-            data = client.get_popular()
-        elif args.type == "top":
-            data = client.get_top_rated()
-        elif args.type == "upcoming":
-            data = client.get_upcoming()
-        else:
-            print(f"Unknown type: {args.type}")
-            return 3
-
+        data = client.get_movies(args.type, args.page)
         results = data.get("results", [])
         if not results:
             print("No results returned.")
@@ -120,4 +111,4 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())
