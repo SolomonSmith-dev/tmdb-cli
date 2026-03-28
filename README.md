@@ -64,9 +64,13 @@ echo "TMDB_API_KEY=your_api_key_here" > .env
 ## Project Structure
 
 ```
-tmdb_app.py        # Application: API client, formatter, CLI entry point
-bin/tmdb-app       # Shell wrapper for running the tool
-requirements.txt   # Python dependencies
+tmdb_cli/
+  client.py        # TMDB API client
+  formatter.py     # Table output formatter
+  cli.py           # CLI entry point (argparse, main)
+pyproject.toml     # Package config and entry points
+tests/             # pytest test suite
+bin/tmdb-app       # Shell wrapper (legacy)
 ```
 
 ## What I Learned
@@ -78,12 +82,12 @@ requirements.txt   # Python dependencies
 
 ## Roadmap
 
-- [ ] Wire up `--page` pagination (currently parsed but not sent to API)
-- [ ] Add `--format json` output for piping to other tools
+- [x] Wire up `--page` pagination
+- [x] Add `--format json` output for piping to other tools
+- [x] Package with `pyproject.toml` for `pip install` support
+- [x] Add unit tests with pytest
 - [ ] Add movie search by title (`--search "inception"`)
 - [ ] Add colored terminal output with `rich`
-- [ ] Package with `pyproject.toml` for `pip install` support
-- [ ] Add unit tests with pytest
 
 ## License
 
