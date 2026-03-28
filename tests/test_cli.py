@@ -1,3 +1,4 @@
+import json
 import pytest
 from unittest.mock import patch, MagicMock
 from tmdb_cli.cli import parse_args, main
@@ -29,6 +30,14 @@ class TestParseArgs:
     def test_negative_page_exits(self):
         with pytest.raises(SystemExit):
             parse_args(["--type", "popular", "--page", "-1"])
+
+    def test_default_format_is_table(self):
+        args = parse_args(["--type", "popular"])
+        assert args.format == "table"
+
+    def test_json_format(self):
+        args = parse_args(["--type", "popular", "--format", "json"])
+        assert args.format == "json"
 
 
 class TestMain:
@@ -72,3 +81,19 @@ class TestMain:
         result = main(["--type", "popular"])
         assert result == 0
         assert "No results" in capsys.readouterr().out
+
+    @patch("tmdb_cli.cli.TMDBClient")
+    def test_json_output(self, mock_client_cls, monkeypatch, capsys):
+        monkeypatch.setenv("TMDB_API_KEY", "fake-key")
+        mock_client = MagicMock()
+        mock_client.get_movies.return_value = {
+            "results": [{"title": "Test Movie", "release_date": "2024-01-01", "vote_average": 7.5}]
+        }
+        mock_client_cls.return_value = mock_client
+
+        result = main(["--type", "popular", "--format", "json"])
+        assert result == 0
+        output = capsys.readouterr().out
+        parsed = json.loads(output)
+        assert len(parsed) == 1
+        assert parsed[0]["title"] == "Test Movie"

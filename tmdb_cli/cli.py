@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import argparse
@@ -16,6 +17,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="TMDB CLI - fetch movie lists from TMDB")
     parser.add_argument("--type", required=True, choices=["playing", "popular", "top", "upcoming"], help="Type of movies to fetch")
     parser.add_argument("--page", type=int, default=1, help="Page of results to fetch (default: 1)")
+    parser.add_argument("--format", choices=["table", "json"], default="table", help="Output format (default: table)")
     args = parser.parse_args(argv)
     if args.page < 1:
         parser.error("--page must be >= 1")
@@ -45,7 +47,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             print("No results returned.")
             return 0
 
-        print(format_movies(results))
+        if args.format == "json":
+            print(json.dumps(results, indent=2))
+        else:
+            print(format_movies(results))
         return 0
     except RuntimeError as e:
         print(f"Error: {e}")
