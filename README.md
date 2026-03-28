@@ -19,37 +19,42 @@ The Dark Knight                          | 2008-07-16 |    8.5
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.9+
 - A free TMDB API key ([get one here](https://www.themoviedb.org/settings/api))
 
 ### Setup
 
 ```bash
 # Clone the repo
-git clone https://github.com/<your-username>/TMDB-CLI-tool.git
-cd TMDB-CLI-tool
+git clone https://github.com/SolomonSmith-dev/TMDB_CLI_tool.git
+cd TMDB_CLI_tool
 
-# Install dependencies
-pip install -r requirements.txt
+# Install the package with dev dependencies
+pip install -e ".[dev]"
 
-# Set your API key (option A: environment variable)
+# Configure your API key via .env
+cp .env.example .env
+# Edit .env and set TMDB_API_KEY=your_api_key_here
+
+# Or export it directly
 export TMDB_API_KEY=your_api_key_here
-
-# Set your API key (option B: .env file)
-echo "TMDB_API_KEY=your_api_key_here" > .env
 ```
 
 ### Usage
 
 ```bash
-# Browse movie categories
-./bin/tmdb-app --type playing     # Now playing in theaters
-./bin/tmdb-app --type popular     # Popular movies
-./bin/tmdb-app --type top         # Top rated of all time
-./bin/tmdb-app --type upcoming    # Upcoming releases
+# Using the installed console script
+tmdb-cli --type playing     # Now playing in theaters
+tmdb-cli --type popular     # Popular movies
+tmdb-cli --type top         # Top rated of all time
+tmdb-cli --type upcoming    # Upcoming releases
 
-# Pagination
-./bin/tmdb-app --type popular --page 2
+# Or run directly with Python
+python -m tmdb_app --type popular
+
+# Pagination and JSON output
+tmdb-cli --type popular --page 2
+tmdb-cli --type top --format json
 ```
 
 ## Tech Stack

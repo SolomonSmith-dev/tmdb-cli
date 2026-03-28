@@ -17,6 +17,7 @@ dev = ["pytest>=7.0"]
 
 [project.scripts]
 tmdb-cli = "tmdb_cli.cli:main_entry"
+tmdb = "tmdb_cli.cli:main_entry"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
