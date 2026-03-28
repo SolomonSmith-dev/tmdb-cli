@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tmdb-cli"
+version = "0.1.0"
+description = "CLI tool for fetching movie lists from TMDB"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.28",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+tmdb-cli = "tmdb_cli.cli:main_entry"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

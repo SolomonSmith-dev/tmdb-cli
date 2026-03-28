@@ -4,3 +4,9 @@ __pycache__/
 
 # Environment
 .env
+
+# Packaging
+*.egg-info/
+dist/
+build/
+.venv/

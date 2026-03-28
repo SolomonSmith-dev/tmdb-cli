@@ -1,38 +1,90 @@
-# TMDB CLI Tool
+# TMDB CLI
 
-This is a small command line interface (CLI) to fetch lists of movies from The Movie Database (TMDB) and display them in the terminal.
+A command-line tool to browse movie listings from [The Movie Database (TMDB)](https://www.themoviedb.org/). Fetch now-playing, popular, top-rated, and upcoming movies directly in your terminal.
 
-Requirements
+## Demo
+
+```
+$ tmdb-app --type popular
+
+Title                                    | Release    | Rating
+-----------------------------------------------------------------
+The Shawshank Redemption                 | 1994-09-23 |    8.7
+The Godfather                            | 1972-03-14 |    8.7
+The Dark Knight                          | 2008-07-16 |    8.5
+...
+```
+
+## Quick Start
+
+### Prerequisites
 
 - Python 3.8+
-- A TMDB API key (set via the TMDB_API_KEY environment variable)
-- Install dependencies: `pip install -r requirements.txt`
+- A free TMDB API key ([get one here](https://www.themoviedb.org/settings/api))
 
-Usage
+### Setup
 
-Run from the project root (or install the wrapper as an executable):
+```bash
+# Clone the repo
+git clone https://github.com/<your-username>/TMDB-CLI-tool.git
+cd TMDB-CLI-tool
 
-tmdb-app --type playing
-tmdb-app --type popular
-tmdb-app --type top
-tmdb-app --type upcoming
+# Install dependencies
+pip install -r requirements.txt
 
-You can also specify `--page N` to fetch a specific page of results.
-
-Using a local `.env` file
-
-You can keep your API key in a local `.env` file (recommended for local development). Create a file named `.env` in the project root with:
-
-TMDB_API_KEY=your_v3_api_key_here
-
-If `python-dotenv` is installed (it's listed in `requirements.txt`), the CLI will load this file automatically.
-
-Example (using environment variable):
-
+# Set your API key (option A: environment variable)
 export TMDB_API_KEY=your_api_key_here
-./bin/tmdb-app --type popular
 
-Notes
+# Set your API key (option B: .env file)
+echo "TMDB_API_KEY=your_api_key_here" > .env
+```
 
-- Handles basic network and API errors and prints a friendly message.
-- This is a small demo project. Contributions welcome.
+### Usage
+
+```bash
+# Browse movie categories
+./bin/tmdb-app --type playing     # Now playing in theaters
+./bin/tmdb-app --type popular     # Popular movies
+./bin/tmdb-app --type top         # Top rated of all time
+./bin/tmdb-app --type upcoming    # Upcoming releases
+
+# Pagination
+./bin/tmdb-app --type popular --page 2
+```
+
+## Tech Stack
+
+| Tool | Purpose |
+|---|---|
+| **Python 3** | Core language |
+| **requests** | HTTP client for TMDB API v3 |
+| **argparse** | CLI argument parsing (stdlib) |
+| **python-dotenv** | Load API key from `.env` file |
+
+## Project Structure
+
+```
+tmdb_app.py        # Application: API client, formatter, CLI entry point
+bin/tmdb-app       # Shell wrapper for running the tool
+requirements.txt   # Python dependencies
+```
+
+## What I Learned
+
+- How to design a clean API client class with separation between HTTP transport and business logic
+- Working with REST APIs: query parameters, error handling, pagination
+- CLI design patterns with argparse: subcommands, argument validation, exit codes
+- Managing secrets via environment variables instead of hardcoding
+
+## Roadmap
+
+- [ ] Wire up `--page` pagination (currently parsed but not sent to API)
+- [ ] Add `--format json` output for piping to other tools
+- [ ] Add movie search by title (`--search "inception"`)
+- [ ] Add colored terminal output with `rich`
+- [ ] Package with `pyproject.toml` for `pip install` support
+- [ ] Add unit tests with pytest
+
+## License
+
+MIT
