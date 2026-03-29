@@ -14,10 +14,24 @@ from tmdb_cli.formatter import format_movies
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="TMDB CLI - fetch movie lists from TMDB")
-    parser.add_argument("--type", required=True, choices=["playing", "popular", "top", "upcoming"], help="Type of movies to fetch")
-    parser.add_argument("--page", type=int, default=1, help="Page of results to fetch (default: 1)")
-    parser.add_argument("--format", choices=["table", "json"], default="table", help="Output format (default: table)")
+    parser = argparse.ArgumentParser(
+        description="TMDB CLI - fetch movie lists from TMDB"
+    )
+    parser.add_argument(
+        "--type",
+        required=True,
+        choices=["playing", "popular", "top", "upcoming"],
+        help="Type of movies to fetch",
+    )
+    parser.add_argument(
+        "--page", type=int, default=1, help="Page of results to fetch (default: 1)"
+    )
+    parser.add_argument(
+        "--format",
+        choices=["table", "json"],
+        default="table",
+        help="Output format (default: table)",
+    )
     args = parser.parse_args(argv)
     if args.page < 1:
         parser.error("--page must be >= 1")

@@ -15,7 +15,9 @@ class TMDBClient:
     def __init__(self, api_key: str):
         self.api_key = api_key
 
-    def _get(self, path: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _get(
+        self, path: str, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         if params is None:
             params = {}
         params["api_key"] = self.api_key

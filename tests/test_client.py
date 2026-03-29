@@ -38,6 +38,7 @@ class TestTMDBClient:
     @patch("tmdb_cli.client.requests.get")
     def test_network_error_raises_runtime(self, mock_get):
         import requests
+
         mock_get.side_effect = requests.ConnectionError("timeout")
 
         with pytest.raises(RuntimeError, match="Network/API error"):
@@ -46,6 +47,7 @@ class TestTMDBClient:
     @patch("tmdb_cli.client.requests.get")
     def test_http_error_raises_runtime(self, mock_get):
         import requests as req
+
         mock_resp = MagicMock()
         mock_resp.raise_for_status.side_effect = req.HTTPError("401 Unauthorized")
         mock_get.return_value = mock_resp

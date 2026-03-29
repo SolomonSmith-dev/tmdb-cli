@@ -52,7 +52,13 @@ class TestMain:
         monkeypatch.setenv("TMDB_API_KEY", "fake-key")
         mock_client = MagicMock()
         mock_client.get_movies.return_value = {
-            "results": [{"title": "Test Movie", "release_date": "2024-01-01", "vote_average": 7.5}]
+            "results": [
+                {
+                    "title": "Test Movie",
+                    "release_date": "2024-01-01",
+                    "vote_average": 7.5,
+                }
+            ]
         }
         mock_client_cls.return_value = mock_client
 
@@ -87,7 +93,13 @@ class TestMain:
         monkeypatch.setenv("TMDB_API_KEY", "fake-key")
         mock_client = MagicMock()
         mock_client.get_movies.return_value = {
-            "results": [{"title": "Test Movie", "release_date": "2024-01-01", "vote_average": 7.5}]
+            "results": [
+                {
+                    "title": "Test Movie",
+                    "release_date": "2024-01-01",
+                    "vote_average": 7.5,
+                }
+            ]
         }
         mock_client_cls.return_value = mock_client
 
