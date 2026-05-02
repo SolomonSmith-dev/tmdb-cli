@@ -8,6 +8,7 @@ _API_KEY_PARAM_RE = re.compile(r"([?&])api_key=[^&\s]+")
 def _redact(message: str) -> str:
     return _API_KEY_PARAM_RE.sub(r"\1api_key=***REDACTED***", message)
 
+
 BASE_URL = "https://api.themoviedb.org/3"
 
 ENDPOINTS = {
