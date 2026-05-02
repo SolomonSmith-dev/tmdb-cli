@@ -11,31 +11,36 @@ def test_format_movies_single():
 
 def test_format_movies_empty():
     output = format_movies([])
-    lines = output.strip().split("\n")
-    assert len(lines) == 2  # header + separator only
+    assert "Title" in output
+    assert "Release" in output
+    assert "Rating" in output
 
 
-def test_format_movies_long_title_truncated():
-    movies = [{"title": "A" * 60, "release_date": "2024-01-01", "vote_average": 5.0}]
+def test_format_movies_long_title_renders_fully():
+    long_title = "Inception" * 10
+    movies = [{"title": long_title, "release_date": "2024-01-01", "vote_average": 5.0}]
     output = format_movies(movies)
-    data_line = output.strip().split("\n")[2]
-    title_part = data_line.split("|")[0]
-    assert len(title_part.strip()) <= 40
+    assert "..." not in output and "…" not in output
+    assert output.count("Inception") >= 9
+    for line in output.split("\n"):
+        assert len(line) <= 120
 
 
 def test_format_movies_missing_fields():
     movies = [{"name": "Fallback Name"}]
     output = format_movies(movies)
     assert "Fallback Name" in output
-    assert "-" in output  # missing release_date and vote_average
+    assert "-" in output
 
 
-def test_format_movies_line_count():
+def test_format_movies_renders_each_movie():
     movies = [
-        {"title": "A", "release_date": "2024-01-01", "vote_average": 7.0},
-        {"title": "B", "release_date": "2024-02-01", "vote_average": 8.0},
-        {"title": "C", "release_date": "2024-03-01", "vote_average": 9.0},
+        {"title": "Inception", "release_date": "2010-07-16", "vote_average": 8.4},
+        {"title": "Tenet", "release_date": "2020-08-26", "vote_average": 7.3},
+        {"title": "Dune", "release_date": "2021-10-22", "vote_average": 8.0},
     ]
     output = format_movies(movies)
-    lines = output.strip().split("\n")
-    assert len(lines) == 5  # header + separator + 3 movies
+    assert output.count("Inception") == 1
+    assert output.count("Tenet") == 1
+    assert output.count("Dune") == 1
+    assert "2010-07-16" in output and "2020-08-26" in output and "2021-10-22" in output

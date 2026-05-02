@@ -5,15 +5,18 @@ A command-line tool to browse movie listings from [The Movie Database (TMDB)](ht
 ## Demo
 
 ```
-$ tmdb-app --type popular
+$ tmdb-cli --type popular
 
-Title                                    | Release    | Rating
------------------------------------------------------------------
-The Shawshank Redemption                 | 1994-09-23 |    8.7
-The Godfather                            | 1972-03-14 |    8.7
-The Dark Knight                          | 2008-07-16 |    8.5
-...
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┓
+┃ Title                        ┃ Release    ┃ Rating ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━┩
+│ The Shawshank Redemption     │ 1994-09-23 │    8.7 │
+│ The Godfather                │ 1972-03-14 │    8.7 │
+│ The Dark Knight              │ 2008-07-16 │    8.5 │
+└──────────────────────────────┴────────────┴────────┘
 ```
+
+Output is colored when stdout is a TTY, and degrades to plain text automatically when piped (so `| jq` and other Unix-pipe workflows stay clean).
 
 ## Quick Start
 
@@ -52,9 +55,16 @@ tmdb-cli --type upcoming    # Upcoming releases
 # Or run directly with Python
 python -m tmdb_app --type popular
 
+# Search by title
+tmdb-cli --search "inception"
+tmdb-cli --search "dune" --page 2
+
 # Pagination and JSON output
 tmdb-cli --type popular --page 2
 tmdb-cli --type top --format json
+
+# JSON output pipes cleanly into jq (no ANSI color leak)
+tmdb-cli --search "inception" --format json | jq '.[0].title'
 ```
 
 ## Tech Stack
@@ -65,6 +75,8 @@ tmdb-cli --type top --format json
 | **requests** | HTTP client for TMDB API v3 |
 | **argparse** | CLI argument parsing (stdlib) |
 | **python-dotenv** | Load API key from `.env` file |
+| **rich** | Colored terminal tables (with TTY detection for safe piping) |
+| **pytest** | Test suite (30 tests across client, CLI, and formatter) |
 
 ## Project Structure
 
@@ -91,8 +103,8 @@ bin/tmdb-app       # Shell wrapper (legacy)
 - [x] Add `--format json` output for piping to other tools
 - [x] Package with `pyproject.toml` for `pip install` support
 - [x] Add unit tests with pytest
-- [ ] Add movie search by title (`--search "inception"`)
-- [ ] Add colored terminal output with `rich`
+- [x] Add movie search by title (`--search "inception"`)
+- [x] Add colored terminal output with `rich` (auto-degrades when piped)
 
 ## License
 
