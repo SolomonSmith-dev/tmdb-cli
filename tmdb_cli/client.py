@@ -1,13 +1,20 @@
+import re
 import requests
 from typing import Any, Dict, Optional
 
-BASE_URL = "https://api.themoviedb.org/3/movie"
+_API_KEY_PARAM_RE = re.compile(r"([?&])api_key=[^&\s]+")
+
+
+def _redact(message: str) -> str:
+    return _API_KEY_PARAM_RE.sub(r"\1api_key=***REDACTED***", message)
+
+BASE_URL = "https://api.themoviedb.org/3"
 
 ENDPOINTS = {
-    "playing": "now_playing",
-    "popular": "popular",
-    "top": "top_rated",
-    "upcoming": "upcoming",
+    "playing": "movie/now_playing",
+    "popular": "movie/popular",
+    "top": "movie/top_rated",
+    "upcoming": "movie/upcoming",
 }
 
 
@@ -28,8 +35,11 @@ class TMDBClient:
             resp.raise_for_status()
             return resp.json()
         except requests.RequestException as e:
-            raise RuntimeError(f"Network/API error: {e}") from e
+            raise RuntimeError(f"Network/API error: {_redact(str(e))}") from e
 
     def get_movies(self, category: str, page: int = 1) -> Dict[str, Any]:
         endpoint = ENDPOINTS[category]
         return self._get(endpoint, params={"page": page})
+
+    def search_movies(self, query: str, page: int = 1) -> Dict[str, Any]:
+        return self._get("search/movie", params={"query": query, "page": page})

@@ -39,10 +39,25 @@ class TestParseArgs:
         args = parse_args(["--type", "popular", "--format", "json"])
         assert args.format == "json"
 
+    def test_valid_search(self):
+        args = parse_args(["--search", "inception"])
+        assert args.search == "inception"
+        assert args.type is None
+
+    def test_search_with_page(self):
+        args = parse_args(["--search", "tenet", "--page", "2"])
+        assert args.search == "tenet"
+        assert args.page == 2
+
+    def test_search_and_type_mutex_exits(self):
+        with pytest.raises(SystemExit):
+            parse_args(["--type", "popular", "--search", "dune"])
+
 
 class TestMain:
     def test_missing_api_key(self, monkeypatch, capsys):
         monkeypatch.delenv("TMDB_API_KEY", raising=False)
+        monkeypatch.setattr("tmdb_cli.cli.load_dotenv", lambda *a, **kw: None)
         result = main(["--type", "popular"])
         assert result == 2
         assert "TMDB_API_KEY" in capsys.readouterr().out
@@ -87,6 +102,26 @@ class TestMain:
         result = main(["--type", "popular"])
         assert result == 0
         assert "No results" in capsys.readouterr().out
+
+    @patch("tmdb_cli.cli.TMDBClient")
+    def test_successful_search(self, mock_client_cls, monkeypatch, capsys):
+        monkeypatch.setenv("TMDB_API_KEY", "fake-key")
+        mock_client = MagicMock()
+        mock_client.search_movies.return_value = {
+            "results": [
+                {
+                    "title": "Inception",
+                    "release_date": "2010-07-16",
+                    "vote_average": 8.4,
+                }
+            ]
+        }
+        mock_client_cls.return_value = mock_client
+
+        result = main(["--search", "inception"])
+        assert result == 0
+        assert "Inception" in capsys.readouterr().out
+        mock_client.search_movies.assert_called_once_with("inception", 1)
 
     @patch("tmdb_cli.cli.TMDBClient")
     def test_json_output(self, mock_client_cls, monkeypatch, capsys):

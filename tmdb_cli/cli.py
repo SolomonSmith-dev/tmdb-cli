@@ -10,18 +10,23 @@ except ImportError:
     load_dotenv = None
 
 from tmdb_cli.client import TMDBClient
-from tmdb_cli.formatter import format_movies
+from tmdb_cli.formatter import format_movies, print_movies
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="TMDB CLI - fetch movie lists from TMDB"
     )
-    parser.add_argument(
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument(
         "--type",
-        required=True,
         choices=["playing", "popular", "top", "upcoming"],
-        help="Type of movies to fetch",
+        help="Type of movie list to fetch",
+    )
+    source.add_argument(
+        "--search",
+        metavar="QUERY",
+        help="Search movies by title",
     )
     parser.add_argument(
         "--page", type=int, default=1, help="Page of results to fetch (default: 1)"
@@ -55,7 +60,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     client = TMDBClient(api_key)
 
     try:
-        data = client.get_movies(args.type, args.page)
+        if args.search:
+            data = client.search_movies(args.search, args.page)
+        else:
+            data = client.get_movies(args.type, args.page)
         results = data.get("results", [])
         if not results:
             print("No results returned.")
@@ -63,6 +71,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
         if args.format == "json":
             print(json.dumps(results, indent=2))
+        elif sys.stdout.isatty():
+            print_movies(results)
         else:
             print(format_movies(results))
         return 0
