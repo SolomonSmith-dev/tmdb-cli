@@ -76,7 +76,7 @@ tmdb-cli --search "inception" --format json | jq '.[0].title'
 | **argparse** | CLI argument parsing (stdlib) |
 | **python-dotenv** | Load API key from `.env` file |
 | **rich** | Colored terminal tables (with TTY detection for safe piping) |
-| **pytest** | Test suite (29 tests across client, CLI, and formatter) |
+| **pytest** | Test suite (30 tests across client, CLI, and formatter) |
 
 ## Project Structure
 

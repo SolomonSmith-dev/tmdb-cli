@@ -20,7 +20,8 @@ def test_format_movies_long_title_renders_fully():
     long_title = "Inception" * 10
     movies = [{"title": long_title, "release_date": "2024-01-01", "vote_average": 5.0}]
     output = format_movies(movies)
-    assert long_title.replace("Inception", "") == "" or "Inception" in output
+    assert "..." not in output and "…" not in output
+    assert output.count("Inception") >= 9
     for line in output.split("\n"):
         assert len(line) <= 120
 

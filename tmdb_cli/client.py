@@ -36,7 +36,7 @@ class TMDBClient:
             resp.raise_for_status()
             return resp.json()
         except requests.RequestException as e:
-            raise RuntimeError(f"Network/API error: {_redact(str(e))}") from e
+            raise RuntimeError(f"Network/API error: {_redact(str(e))}") from None
 
     def get_movies(self, category: str, page: int = 1) -> Dict[str, Any]:
         endpoint = ENDPOINTS[category]
