@@ -21,12 +21,10 @@ def build_table(movies: List[Dict[str, Any]]) -> Table:
 
 
 def format_movies(movies: List[Dict[str, Any]]) -> str:
-    """Render the movie table as a plain string (no ANSI). Safe for piping and tests."""
     console = Console(record=True, width=100, color_system=None)
     console.print(build_table(movies))
     return console.export_text().rstrip()
 
 
 def print_movies(movies: List[Dict[str, Any]]) -> None:
-    """Print the movie table to stdout, with color when stdout is a TTY."""
     Console().print(build_table(movies))
