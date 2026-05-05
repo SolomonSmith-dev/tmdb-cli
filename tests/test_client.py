@@ -95,3 +95,21 @@ class TestTMDBClient:
 
         assert "SECRET123" not in str(exc_info.value)
         assert "api_key=***REDACTED***" in str(exc_info.value)
+
+    @patch("tmdb_cli.client.requests.get")
+    def test_search_api_key_redacted_in_error(self, mock_get):
+        import requests as req
+
+        leaky_msg = (
+            "401 Client Error: Unauthorized for url: "
+            "https://api.themoviedb.org/3/search/movie?query=inception&page=1&api_key=SECRET456"
+        )
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status.side_effect = req.HTTPError(leaky_msg)
+        mock_get.return_value = mock_resp
+
+        with pytest.raises(RuntimeError) as exc_info:
+            self.client.search_movies("inception")
+
+        assert "SECRET456" not in str(exc_info.value)
+        assert "api_key=***REDACTED***" in str(exc_info.value)

@@ -10,7 +10,7 @@ except ImportError:
     load_dotenv = None
 
 from tmdb_cli.client import TMDBClient
-from tmdb_cli.formatter import format_movies, print_movies
+from tmdb_cli.formatter import print_movies
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
@@ -71,10 +71,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
         if args.format == "json":
             print(json.dumps(results, indent=2))
-        elif sys.stdout.isatty():
-            print_movies(results)
         else:
-            print(format_movies(results))
+            print_movies(results)
         return 0
     except RuntimeError as e:
         print(f"Error: {e}")
