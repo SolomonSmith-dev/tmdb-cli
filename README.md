@@ -29,8 +29,8 @@ Output is colored when stdout is a TTY, and degrades to plain text automatically
 
 ```bash
 # Clone the repo
-git clone https://github.com/SolomonSmith-dev/TMDB_CLI_tool.git
-cd TMDB_CLI_tool
+git clone https://github.com/SolomonSmith-dev/tmdb-cli.git
+cd tmdb-cli
 
 # Install the package with dev dependencies
 pip install -e ".[dev]"
