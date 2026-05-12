@@ -1,5 +1,7 @@
 # TMDB CLI
 
+![CI](https://github.com/SolomonSmith-dev/tmdb-cli/actions/workflows/ci.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
+
 A command-line tool to browse movie listings from [The Movie Database (TMDB)](https://www.themoviedb.org/). Fetch now-playing, popular, top-rated, and upcoming movies directly in your terminal.
 
 ## Demo
