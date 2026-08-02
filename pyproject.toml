@@ -22,3 +22,12 @@ tmdb = "tmdb_cli.cli:main_entry"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py39"
+
+[tool.ruff.lint]
+# Explicit rather than implicit: ruff's defaults have shifted between
+# releases, silently reclassifying existing code as failing. Declaring the
+# set here means a lint result depends only on this repo's own config.
+select = ["E4", "E7", "E9", "F"]

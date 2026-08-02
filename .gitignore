@@ -20,4 +20,5 @@ build/
 
 # Claude Code / claude-mem local state
 .claude/
+.superpowers/
 ~/
