@@ -4,9 +4,11 @@ from pathlib import Path
 
 DB_PATH = os.path.expanduser("~/.tmdb-cli/tmdb.db")
 
+
 def get_db_path() -> str:
     """Return the database file path."""
     return DB_PATH
+
 
 def init_db(db_path: str = None) -> sqlite3.Connection:
     """

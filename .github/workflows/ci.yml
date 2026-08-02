@@ -14,7 +14,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install ruff
+      # Pinned: an unpinned ruff turns CI into a function of the release
+      # calendar rather than the commit. Bump deliberately, not by surprise.
+      - run: pip install ruff==0.15.8
       - run: ruff check .
       - run: ruff format --check .
 
