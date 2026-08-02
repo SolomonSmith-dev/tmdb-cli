@@ -1,4 +1,3 @@
-import sqlite3
 import tempfile
 import os
 from tmdb_cli.db.schema import init_db
